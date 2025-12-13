@@ -23,7 +23,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role'
+        'role',
+        'transaction_pin', // ⬅️ tambahkan
+
     ];
 
     /**
@@ -36,6 +38,8 @@ class User extends Authenticatable
         'two_factor_secret',
         'two_factor_recovery_codes',
         'remember_token',
+        'transaction_pin', // ⬅️ tambahkan
+
     ];
 
     /**
@@ -59,7 +63,12 @@ class User extends Authenticatable
         return Str::of($this->name)
             ->explode(' ')
             ->take(2)
-            ->map(fn ($word) => Str::substr($word, 0, 1))
+            ->map(fn($word) => Str::substr($word, 0, 1))
             ->implode('');
+    }
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
     }
 }

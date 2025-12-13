@@ -13,7 +13,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'is_admin' => App\Http\Middleware\IsAdmin::class,
+            'check_pin' => App\Http\Middleware\CheckTransactionPin::class, // ⬅️
         ]);
+
+
     })
 
     ->withExceptions(function (Exceptions $exceptions): void {

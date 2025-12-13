@@ -6,12 +6,30 @@ use App\Livewire\Settings\Password;
 use App\Livewire\Settings\TwoFactor;
 use App\Livewire\Settings\Appearance;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PinController;
+use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\CartController;
+
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
 
 // Home page
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', [FrontendController::class, 'home'])->name("home");
+Route::get('/shop', [FrontendController::class, 'shop'])->name("shop");
+Route::get('/product/{product}', [FrontendController::class, 'product'])->name("product.show");
+Route::middleware('auth')->post('/set-pin', [PinController::class, 'store'])->name('pin.store');
+
+Route::middleware('auth')->group(function () {
+
+    Route::get('/cart', action: [CartController::class, 'index'])->name('cart');
+    Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
+    Route::patch('/cart/{cart}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/{cart}', [CartController::class, 'destroy'])->name('cart.destroy');
+    Route::view('/checkout', 'frontend.pages.checkout')->name("checkout");
+
+    Route::post('/set-pin', [PinController::class, 'store'])
+        ->name('pin.store');
+});
 
 
 // ADMIN DASHBOARD (khusus admin)
@@ -45,6 +63,12 @@ Route::middleware(['auth', 'is_admin'])
 
 
 
+Route::middleware(['check_pin'])->group(function () {
+    Route::get('/', [FrontendController::class, 'home'])->name("home");
+    Route::get('/shop', action: [FrontendController::class, 'shop'])->name("shop");
+    Route::get('/cart', action: [CartController::class, 'index'])->name('cart');
+
+});
 
 // MATIKAN /dashboard untuk user biasa
 Route::view('dashboard', 'dashboard')
