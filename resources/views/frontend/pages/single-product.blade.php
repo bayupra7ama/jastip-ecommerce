@@ -66,18 +66,24 @@
                         <p>{{ $product->description }}</p>
 
                         <div class="single-product-form">
-                            <form action="{{ route('cart.store') }}" method="POST">
+                            <form action="{{ route('cart.store') }}" method="POST" id="add-to-cart-form">
                                 @csrf
 
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
 
                                 <input type="number" name="quantity" min="1" value="1">
 
-                                <button type="submit" class="cart-btn">
+                                <a href="#" class="cart-btn"
+                                    onclick="event.preventDefault(); this.closest('form').submit();">
                                     <i class="fas fa-shopping-cart"></i> Add to Cart
-                                </button>
+                                </a>
                             </form>
+
+                            <p>
+                                <strong>Categories:</strong> {{ $product->category->name }}
+                            </p>
                         </div>
+
 
 
 

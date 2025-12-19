@@ -1,97 +1,120 @@
 <?php
 
-use Laravel\Fortify\Features;
-use App\Livewire\Settings\Profile;
-use App\Livewire\Settings\Password;
-use App\Livewire\Settings\TwoFactor;
-use App\Livewire\Settings\Appearance;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PinController;
-use App\Http\Controllers\FrontendController;
-use App\Http\Controllers\CartController;
+use Laravel\Fortify\Features;
 
-use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\{
+    FrontendController,
+    CartController,
+    CheckoutController,
+    OrderController,
+    PaymentController,
+    PinController
+};
 
-// Home page
-Route::get('/', [FrontendController::class, 'home'])->name("home");
-Route::get('/shop', [FrontendController::class, 'shop'])->name("shop");
-Route::get('/product/{product}', [FrontendController::class, 'product'])->name("product.show");
-Route::middleware('auth')->post('/set-pin', [PinController::class, 'store'])->name('pin.store');
+use App\Http\Controllers\Admin\{
+    DashboardController,
+    ProductController,
+    CategoryController,
+    OrderController as AdminOrder
+};
 
+use App\Livewire\Settings\{
+    Profile,
+    Password,
+    TwoFactor,
+    Appearance
+};
+
+/*
+|--------------------------------------------------------------------------
+| PUBLIC (BOLEH DIAKSES SEMUA)
+|--------------------------------------------------------------------------
+*/
+Route::get('/', [FrontendController::class, 'home'])->name('home');
+Route::get('/shop', [FrontendController::class, 'shop'])->name('shop');
+Route::get('/product/{product}', [FrontendController::class, 'product'])->name('product.show');
+
+/*
+|--------------------------------------------------------------------------
+| PAYMENT CALLBACK
+|--------------------------------------------------------------------------
+*/
+Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
+Route::get('/payment/pending', [PaymentController::class, 'pending'])->name('payment.pending');
+Route::get('/payment/failed', [PaymentController::class, 'failed'])->name('payment.failed');
+
+/*
+|--------------------------------------------------------------------------
+| SET PIN (LOGIN REQUIRED, TANPA CHECK_PIN)
+|--------------------------------------------------------------------------
+*/
 Route::middleware('auth')->group(function () {
+    Route::post('/set-pin', [PinController::class, 'store'])->name('pin.store');
+});
 
-    Route::get('/cart', action: [CartController::class, 'index'])->name('cart');
+/*
+|--------------------------------------------------------------------------
+| USER LOGIN + WAJIB CHECK PIN
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'check_pin'])->group(function () {
+
+    Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
     Route::patch('/cart/{cart}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/{cart}', [CartController::class, 'destroy'])->name('cart.destroy');
-    Route::view('/checkout', 'frontend.pages.checkout')->name("checkout");
 
-    Route::post('/set-pin', [PinController::class, 'store'])
-        ->name('pin.store');
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout/store', [CheckoutController::class, 'store'])->name('checkout.store');
+
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 });
 
-
-// ADMIN DASHBOARD (khusus admin)
+/*
+|--------------------------------------------------------------------------
+| ADMIN (TIDAK WAJIB PIN)
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth', 'is_admin'])
-    ->as('admin.')
-
+    ->prefix('admin')
+    ->name('admin.')
     ->group(function () {
-        Route::get('/admin/dashboard', function () {
-            return view('dashboard');
-        })->name('dashboard');
 
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-
-        Route::get('products', [ProductController::class, 'index'])->name('products.index');
-        Route::get('products/create', [ProductController::class, 'create'])->name('products.create');
-        Route::post('products', [ProductController::class, 'store'])->name('products.store');
-        Route::get('products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
-        Route::put('products/{product}', [ProductController::class, 'update'])->name('products.update');
-        Route::delete('products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
-
-        Route::delete(
-            'admin/products/{product}/image/{image}',
-            [ProductController::class, 'deleteImage']
-        )->name('products.image.delete');
-
-
+        Route::resource('products', ProductController::class)->except(['show']);
         Route::resource('categories', CategoryController::class)->except(['show']);
 
-
+        Route::resource('orders', AdminOrder::class)
+            ->only(['index', 'show', 'update']);
     });
 
+/*
+|--------------------------------------------------------------------------
+| USER SETTINGS (JETSTREAM)
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
 
+    Route::redirect('/settings', '/settings/profile');
 
-Route::middleware(['check_pin'])->group(function () {
-    Route::get('/', [FrontendController::class, 'home'])->name("home");
-    Route::get('/shop', action: [FrontendController::class, 'shop'])->name("shop");
-    Route::get('/cart', action: [CartController::class, 'index'])->name('cart');
+    Route::get('/settings/profile', Profile::class)->name('profile.edit');
+    Route::get('/settings/password', Password::class)->name('user-password.edit');
+    Route::get('/settings/appearance', Appearance::class)->name('appearance.edit');
 
-});
-
-// MATIKAN /dashboard untuk user biasa
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified', 'is_admin']) // hanya admin yang boleh
-    ->name('dashboard');
-
-
-// USER SETTINGS (Jetstream)
-Route::middleware(['auth'])->group(function () {
-    Route::redirect('settings', 'settings/profile');
-
-    Route::get('settings/profile', Profile::class)->name('profile.edit');
-    Route::get('settings/password', Password::class)->name('user-password.edit');
-    Route::get('settings/appearance', Appearance::class)->name('appearance.edit');
-
-    Route::get('settings/two-factor', TwoFactor::class)
+    Route::get('/settings/two-factor', TwoFactor::class)
         ->middleware(
             when(
                 Features::canManageTwoFactorAuthentication()
-                && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
+                && Features::optionEnabled(
+                    Features::twoFactorAuthentication(),
+                    'confirmPassword'
+                ),
                 ['password.confirm'],
-                [],
-            ),
+                []
+            )
         )
         ->name('two-factor.show');
 });

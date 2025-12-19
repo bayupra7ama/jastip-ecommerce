@@ -29,9 +29,19 @@
                             Rp {{ number_format($product->price, 0, ',', '.') }}
                         </p>
 
-                        <a href="#" class="cart-btn">
-                            <i class="fas fa-shopping-cart"></i> Add to Cart
-                        </a>
+                        <form action="{{ route('cart.store') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <input type="hidden" name="quantity" value="1">
+
+                            <a href="#" class="cart-btn"
+                                onclick="event.preventDefault(); this.closest('form').submit();">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </a>
+                        </form>
+
+
+
                     </div>
                 </div>
             @empty

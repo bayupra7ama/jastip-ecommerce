@@ -2,6 +2,8 @@
     "use strict";
 
     $(document).ready(function ($) {
+
+        
         // testimonial sliders
         $(".testimonial-sliders").owlCarousel({
             items: 1,
@@ -22,7 +24,16 @@
                     loop: true,
                 },
             },
+
+            
+     
         });
+
+        setTimeout(() => {
+            document.querySelectorAll(".toast").forEach((toast) => {
+                toast.classList.remove("show");
+            });
+        }, 3000);
 
         // homepage slider
         $(".homepage-slider").owlCarousel({
@@ -190,4 +201,6 @@
             filter: data,
         });
     });
+
+    
 })(jQuery);

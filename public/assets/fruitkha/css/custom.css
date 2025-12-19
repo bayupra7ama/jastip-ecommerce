@@ -1,0 +1,55 @@
+/* ===============================
+   FIX FILTER ORDER (OVERRIDE)
+   =============================== */
+.product-filters ul {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    text-align: center;
+}
+
+.product-filters ul li {
+    display: block;
+    margin: 0;
+    white-space: nowrap;
+}
+/* normal */
+.product-filters ul li a {
+    color: #323232; /* HITAM */
+    text-decoration: none;
+}
+
+
+
+/* active */
+.product-filters ul li.active a {
+    color: #fff; /* PUTIH */
+}
+
+.product-filters ul {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* MOBILE: horizontal scroll */
+@media (max-width: 768px) {
+    .product-filters ul {
+        flex-wrap: nowrap;          /* ❌ jangan turun baris */
+        justify-content: flex-start;
+        overflow-x: auto;           /* 🔥 scroll horizontal */
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 10px;
+    }
+
+    .product-filters ul li {
+        flex: 0 0 auto;             /* penting: item tidak mengecil */
+    }
+
+    /* optional: sembunyikan scrollbar (estetika) */
+    .product-filters ul::-webkit-scrollbar {
+        display: none;
+    }
+}

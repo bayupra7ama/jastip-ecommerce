@@ -4,12 +4,14 @@
             <div class="col-lg-12 col-sm-12 text-center">
                 <div class="main-menu-wrap">
 
+                    {{-- LOGO --}}
                     <div class="site-logo">
-                        <a href="#">
-                            <img src="{{ asset('assets/fruitkha/img/logo.png') }}" alt="">
+                        <a href="{{ route('home') }}">
+                            <img src="{{ asset('assets/fruitkha/img/logo.png') }}" alt="Logo">
                         </a>
                     </div>
 
+                    {{-- MENU --}}
                     <nav class="main-menu">
                         <ul>
                             <li class="{{ request()->routeIs('home') ? 'current-list-item' : '' }}">
@@ -21,74 +23,63 @@
                             </li>
 
                             @auth
-                                {{-- Hanya user login (role user) --}}
                                 @if (auth()->user()->role === 'user')
-                                    <li><a href="#">Pesanan Saya</a></li>
+                                    <li>
+                                        <a href="{{ route('orders.index') }}">Pesanan Saya</a>
+                                    </li>
                                 @endif
                             @endauth
 
-                            {{-- menu user mobile --}}
-                            @guest
-                                <li class="d-block d-lg-none"><a href="{{ route('login') }}">Login</a></li>
-                            @else
-                                {{-- <li class="d-block d-lg-none"><a href="{{ route('profile.edit') }}">Profile</a></li> --}}
-                                <li class="d-block d-lg-none">
-                                    <a href="#"
-                                        onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();">Logout</a>
-                                    <form id="logout-form-mobile" method="POST" action="{{ route('logout') }}"
-                                        class="d-none">@csrf</form>
-                                </li>
-                            @endguest
 
-                            <li class="d-none d-lg-inline-block">
+                            {{-- ICON AREA (WAJIB DI LI TERAKHIR) --}}
+                            <li>
                                 <div class="header-icons">
-                                    {{-- Cart --}}
-                                    <a class=" shopping-cart"
+
+                                    {{-- CART --}}
+                                    <a class="shopping-cart"
                                         href="{{ auth()->check() ? route('cart') : route('login') }}">
                                         <i class="fas fa-shopping-cart"></i>
                                     </a>
 
-                                    {{-- Search --}}
+                                    {{-- SEARCH --}}
                                     <a class="mobile-hide search-bar-icon" href="#">
                                         <i class="fas fa-search"></i>
                                     </a>
 
-                                    {{-- User menu --}}
+                                    {{-- USER --}}
                                     @guest
-                                        <a class="mobile-hide user-icon" href="{{ route('login') }}">
+                                        <a class="mobile-hide" href="{{ route('login') }}">
                                             <i class="fas fa-user"></i>
                                         </a>
                                     @else
-                                        <div class="dropdown user-dropdown d-inline-block">
-                                            <a class="mobile-hide user-icon dropdown-toggle" href="#" id="userMenu"
-                                                data-toggle="dropdown">
-                                                <i class="fas fa-user"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
-                                                {{-- <a class="dropdown-item" href="{{ route('profile.edit') }}">Profile</a> --}}
-                                                <form method="POST" action="{{ route('logout') }}">
-                                                    @csrf
-                                                    <button class="dropdown-item" type="submit">Logout</button>
-                                                </form>
-                                            </div>
-                                        </div>
+                                        <a class="mobile-hide" href="#"
+                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                            <i class="fas fa-sign-out-alt"></i>
+                                        </a>
+
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                            @csrf
+                                        </form>
                                     @endguest
+
                                 </div>
                             </li>
-                            {{-- Menu user khusus mobile --}}
-
-
                         </ul>
                     </nav>
 
-                    <a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
+                    {{-- SEARCH MOBILE --}}
+                    <a class="mobile-show search-bar-icon" href="#">
+                        <i class="fas fa-search"></i>
+                    </a>
+
                     <div class="mobile-menu"></div>
-                    
+
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 
 <div class="search-area">
     <div class="container">

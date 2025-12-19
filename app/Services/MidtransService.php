@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Services;
+
+use Midtrans\Config;
+use Midtrans\Snap;
+
+class MidtransService
+{
+    public static function init()
+    {
+        Config::$serverKey = config('services.midtrans.server_key');
+        Config::$isProduction = false; // TRUE kalau production
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
+    }
+
+    public static function createSnapToken($order)
+    {
+        self::init();
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => $order->order_code,
+                'gross_amount' => (int) $order->total_amount,
+            ],
+            'customer_details' => [
+                'first_name' => $order->customer_name,
+                'email' => $order->customer_email,
+                'phone' => $order->customer_phone,
+            ],
+        ];
+
+        return Snap::getSnapToken($params);
+    }
+}

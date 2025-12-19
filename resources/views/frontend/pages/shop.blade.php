@@ -40,11 +40,12 @@
                                 Rp {{ number_format($p->price, 0, ',', '.') }}
                             </p>
 
-                            <form action="{{ route('cart.store') }}" method="POST" class="d-inline">
+                            <form action="{{ route('cart.store') }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $p->id }}">
+                                <input type="hidden" name="quantity" value="1">
 
-                                <a href="" class="cart-btn"
+                                <a href="#" class="cart-btn"
                                     onclick="event.preventDefault(); this.closest('form').submit();">
                                     <i class="fas fa-shopping-cart"></i> Add to Cart
                                 </a>
@@ -60,14 +61,10 @@
                 @endforelse
             </div>
 
-            {{-- Pagination --}}
-            <div class="row mt-5">
-                <div class="col-lg-12 text-center">
-                    <div class="pagination-wrap">
-                        {{ $products->links() }}
-                    </div>
-                </div>
+            <div class="pagination-wrap">
+                {{ $products->links('vendor.pagination.fruitkha') }}
             </div>
+
 
         </div>
     </div>

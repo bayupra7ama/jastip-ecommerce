@@ -18,6 +18,6 @@ class PinController extends Controller
 
         session()->forget('must_set_pin');
 
-        return redirect()->route('home')->with('success', 'PIN transaksi berhasil disimpan!');
+        return redirect()->back()->with('success', 'PIN transaksi berhasil disimpan!');
     }
 }

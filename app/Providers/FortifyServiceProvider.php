@@ -42,18 +42,22 @@ class FortifyServiceProvider extends ServiceProvider
                 {
                     $user = auth()->user();
 
-                    // safety: if no user (shouldn't happen right after successful login), go home
                     if (!$user) {
                         return redirect()->route('home');
                     }
 
-                    // choose redirect based on role
                     if ($user->role === 'admin') {
                         return redirect()->route('admin.dashboard');
                     }
 
+                    // 🔥 SET PIN ONCE (ON LOGIN)
+                    if ($user->transaction_pin === null) {
+                        session()->put('must_set_pin', true);
+                    }
+
                     return redirect()->route('home');
                 }
+
             };
         });
 

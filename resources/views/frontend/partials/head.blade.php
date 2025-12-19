@@ -20,5 +20,7 @@
 <link rel="stylesheet" href="{{ asset('assets/fruitkha/css/meanmenu.min.css') }}">
 <!-- main style -->
 <link rel="stylesheet" href="{{ asset('assets/fruitkha/css/main.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/fruitkha/css/custom.css') }}">
+
 <!-- responsive -->
 <link rel="stylesheet" href="{{ asset('assets/fruitkha/css/responsive.css') }}">
