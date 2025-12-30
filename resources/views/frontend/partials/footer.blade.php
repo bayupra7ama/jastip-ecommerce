@@ -43,37 +43,49 @@
 <script src="{{ asset('assets/fruitkha/js/sticker.js') }}"></script>
 <script src="{{ asset('assets/fruitkha/js/main.js') }}"></script>
 
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const loader = document.querySelector('.loader');
-
         if (!loader) return;
 
-        // 1️⃣ TAMPILKAN PRELOADER SAAT SUBMIT FORM
-        document.querySelectorAll('form').forEach(form => {
-            form.addEventListener('submit', function() {
-                loader.style.display = 'block';
-            });
+        // MATIKAN loader saat halaman load
+        window.addEventListener('load', () => {
+            loader.style.display = 'none';
         });
 
-        // 2️⃣ TAMPILKAN PRELOADER SAAT KLIK LINK (KECUALI #)
-        document.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                const href = this.getAttribute('href');
+        // 🔥 EVENT DELEGATION (INI KUNCI)
+        document.body.addEventListener('click', function(e) {
+            const link = e.target.closest('a');
+            if (!link) return;
 
-                if (
-                    href &&
-                    href !== '#' &&
-                    !href.startsWith('javascript') &&
-                    !this.hasAttribute('data-no-loader') &&
-                    this.target !== '_blank'
-                ) {
-                    loader.style.display = 'block';
-                }
-            });
+            const href = link.getAttribute('href');
+
+            // ❌ JANGAN TAMPILKAN LOADER UNTUK:
+            if (
+                !href ||
+                href === '#' ||
+                href.startsWith('javascript') ||
+                link.target === '_blank' ||
+                link.closest('.mean-container') || // 🔥 FIX UTAMA
+                link.closest('.search-area') ||
+                link.closest('.mobile-menu')
+            ) {
+                return;
+            }
+
+            // ✅ BARU NYALAKAN LOADER
+            loader.style.display = 'block';
+        });
+
+        // BACK / BFCache
+        window.addEventListener('pageshow', () => {
+            loader.style.display = 'none';
         });
     });
 </script>
+
+
 
 
 {{-- ================== MODAL SET PIN (SATU-SATUNYA) ================== --}}

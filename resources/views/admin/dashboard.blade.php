@@ -45,7 +45,7 @@
             </a>
 
             <!-- ORDERS -->
-            <a href="{{ route('admin.admin.orders.index') }}"
+            <a href="{{ route('admin.orders.index') }}"
                class="rounded-xl border bg-white dark:bg-zinc-900 dark:border-zinc-700 p-5
                       hover:shadow-md transition">
                 <div class="flex items-center justify-between">

@@ -34,7 +34,7 @@
             </button>
 
             @if (request()->hasAny(['order_status', 'payment_status']))
-                <a href="{{ route('admin.admin.orders.index') }}" class="px-4 py-2 border rounded-lg text-sm text-center">
+                <a href="{{ route('admin.orders.index') }}" class="px-4 py-2 border rounded-lg text-sm text-center">
                     Reset
                 </a>
             @endif

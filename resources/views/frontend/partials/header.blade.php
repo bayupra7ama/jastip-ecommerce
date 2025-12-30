@@ -14,18 +14,18 @@
                     {{-- MENU --}}
                     <nav class="main-menu">
                         <ul>
-                            <li class="{{ request()->routeIs('home') ? 'current-list-item' : '' }}">
+                            <li class="{{ request()->routeIs('home') ? 'current-list-item' : '' }}"  data-no-loader>
                                 <a href="{{ route('home') }}">Home</a>
                             </li>
 
-                            <li class="{{ request()->routeIs('shop') ? 'current-list-item' : '' }}">
+                            <li class="{{ request()->routeIs('shop') ? 'current-list-item' : '' }}"  data-no-loader>
                                 <a href="{{ route('shop') }}">Shop</a>
                             </li>
 
                             @auth
                                 @if (auth()->user()->role === 'user')
                                     <li>
-                                        <a href="{{ route('orders.index') }}">Pesanan Saya</a>
+                                        <a href="{{ route('orders.index') }}"  data-no-loader>Pesanan Saya</a>
                                     </li>
                                 @endif
                             @endauth
@@ -37,27 +37,27 @@
 
                                     {{-- CART --}}
                                     <a class="shopping-cart"
-                                        href="{{ auth()->check() ? route('cart') : route('login') }}">
+                                        href="{{ auth()->check() ? route('cart') : route('login') }}"  data-no-loader>
                                         <i class="fas fa-shopping-cart"></i>
                                     </a>
 
                                     {{-- SEARCH --}}
-                                    <a class="mobile-hide search-bar-icon" href="#">
+                                    <a class="mobile-hide search-bar-icon" href="#"  data-no-loader>
                                         <i class="fas fa-search"></i>
                                     </a>
 
                                     {{-- USER --}}
                                     @guest
-                                        <a class="mobile-hide" href="{{ route('login') }}">
+                                        <a class="mobile-hide" href="{{ route('login') }}"  data-no-loader>
                                             <i class="fas fa-user"></i>
                                         </a>
                                     @else
                                         <a class="mobile-hide" href="#"
-                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"  data-no-loader>
                                             <i class="fas fa-sign-out-alt"></i>
                                         </a>
 
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none"  data-no-loader>
                                             @csrf
                                         </form>
                                     @endguest
@@ -68,7 +68,7 @@
                     </nav>
 
                     {{-- SEARCH MOBILE --}}
-                    <a class="mobile-show search-bar-icon" href="#">
+                    <a class="mobile-show search-bar-icon" href="#"  data-no-loader>
                         <i class="fas fa-search"></i>
                     </a>
 

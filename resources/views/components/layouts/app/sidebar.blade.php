@@ -45,7 +45,7 @@
         </flux:navlist>
 
         <flux:navlist.group heading="Order">
-            <flux:navlist.item icon="shopping-cart" :href="route('admin.admin.orders.index')"
+            <flux:navlist.item icon="shopping-cart" :href="route('admin.orders.index')"
                 :current="request()->routeIs('admin.orders.*')" wire:navigate>
                 Orders
             </flux:navlist.item>
