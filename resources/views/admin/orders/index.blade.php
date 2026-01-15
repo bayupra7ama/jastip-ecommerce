@@ -52,7 +52,7 @@
                             {{ $order->order_code }}
                         </span>
 
-                        <a href="{{ route('admin.admin.orders.show', $order) }}" class="text-sm text-blue-600 font-medium">
+                        <a href="{{ route('admin.orders.show', $order) }}" class="text-sm text-blue-600 font-medium">
                             Detail →
                         </a>
                     </div>
@@ -157,7 +157,7 @@
                             </td>
 
                             <td class="px-4 py-3 text-right">
-                                <a href="{{ route('admin.admin.orders.show', $order) }}"
+                                <a href="{{ route('admin.orders.show', $order) }}"
                                     class="text-blue-600 hover:text-blue-800 font-medium">
                                     Detail →
                                 </a>

@@ -12,7 +12,7 @@
                 </p>
             </div>
 
-            <a href="{{ route('admin.admin.orders.index') }}" class="text-sm text-blue-600 hover:underline">
+            <a href="{{ route('admin.orders.index') }}" class="text-sm text-blue-600 hover:underline">
                 ← Kembali
             </a>
         </div>
@@ -166,7 +166,7 @@
                 <div class="rounded-xl border bg-white dark:bg-zinc-900 dark:border-zinc-700 p-5">
                     <h2 class="font-semibold text-lg mb-4">Update Status</h2>
 
-                    <form method="POST" action="{{ route('admin.admin.orders.update', $order) }}" class="space-y-4">
+                    <form method="POST" action="{{ route('admin.orders.update', $order) }}" class="space-y-4">
                         @csrf
                         @method('PUT')
 
